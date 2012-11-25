@@ -313,8 +313,10 @@ src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/3DTerrain.cpp.o
  src/osgEarthUtil/Common
  src/osgEarthUtil/Controls
  src/osgEarthUtil/EarthManipulator
+ src/osgEarthUtil/ElevationManager
  src/osgEarthUtil/ExampleResources
  src/osgEarthUtil/Export
+ src/osgEarthUtil/ObjectPlacer
  src/osgEarthUtil/SkyNode
 src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/SDLIntegration.cpp.o
  /home/nathan/src/osgearth/src/applications/3DTerrain/SDLIntegration.cpp

@@ -45,6 +45,10 @@ osgEarthAnnotation/LocalGeometryNode
 -
 osgEarthSymbology/Style
 -
+osgEarthUtil/ObjectPlacer
+-
+osgEarthUtil/ElevationManager
+-
 iostream
 -
 SDL/SDL.h
@@ -55,20 +59,6 @@ SDL/SDL_joystick.h
 -
 SDLIntegration.h
 /home/nathan/src/osgearth/src/applications/3DTerrain/SDLIntegration.h
-
-/home/nathan/src/osgearth/src/applications/3DTerrain/SDLIntegration.cpp
-osgViewer/Viewer
--
-SDLIntegration.h
-/home/nathan/src/osgearth/src/applications/3DTerrain/SDLIntegration.h
-SDL.h
--
-SDL_events.h
--
-SDL_joystick.h
--
-iostream
--
 
 /home/nathan/src/osgearth/src/applications/3DTerrain/SDLIntegration.h
 SDL.h
@@ -3560,6 +3550,12 @@ list
 utility
 -
 
+src/osgEarthUtil/ElevationManager
+osgEarthUtil/Common
+-
+osgEarth/MapFrame
+-
+
 src/osgEarthUtil/ExampleResources
 osgEarthUtil/Common
 -
@@ -3579,6 +3575,18 @@ osgViewer/View
 -
 
 src/osgEarthUtil/Export
+
+src/osgEarthUtil/ObjectPlacer
+osgEarthUtil/Common
+-
+osgEarth/MapNode
+-
+osg/Node
+-
+osg/Matrix
+-
+osgUtil/IntersectionVisitor
+-
 
 src/osgEarthUtil/SkyNode
 osgEarthUtil/Common

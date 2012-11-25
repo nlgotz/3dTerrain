@@ -2,12 +2,12 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
 	<File name="3DTerrain.cpp" open="1" top="1" tabpos="1">
-		<Cursor position="8147" topLine="135" />
+		<Cursor position="10861" topLine="228" />
 	</File>
 	<File name="SDLIntegration.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="66" topLine="6" />
+		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="SDLIntegration.h" open="1" top="0" tabpos="3">
-		<Cursor position="1236" topLine="0" />
+		<Cursor position="846" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

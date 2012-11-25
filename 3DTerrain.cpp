@@ -40,6 +40,9 @@
 #include <osgEarthAnnotation/LocalGeometryNode>
 #include <osgEarthSymbology/Style>
 
+#include <osgEarthUtil/ObjectPlacer>
+#include <osgEarthUtil/ElevationManager>
+
 
 #include <iostream>
 
@@ -57,7 +60,6 @@ using namespace osgEarth::Annotation;
 
 
 
-namespace {
 
 enum PS3Button {
     PS3ButtonSelect		= 0,
@@ -77,7 +79,7 @@ enum PS3Button {
     PS3ButtonX		= 14,
     PS3ButtonSquare		= 15,
     PS3ButtonPS3Button	= 16,
-    };
+};
 
 /**
  * Builds our help menu UI.
@@ -121,8 +123,8 @@ static Viewpoint VPs[] = {
     Viewpoint( "Europe",        osg::Vec3d(    0.0,  45.0, 0.0 ), 0.0, -90.0, 4e6 ),
     Viewpoint( "Washington DC", osg::Vec3d(  -77.0,  38.0, 0.0 ), 0.0, -90.0, 1e6 ),
     Viewpoint( "Australia",     osg::Vec3d(  135.0, -20.0, 0.0 ), 0.0, -90.0, 2e6 ),
-    Viewpoint( "Boston",        osg::Vec3d( -71.096936, 42.332771, 0 ), 0.0, -90, 1e5 )
-    };
+    Viewpoint( "Tower Site",        osg::Vec3d(  -88.15841, 42.97873, 0 ), 0.0, -90, 1e5 )
+};
 
 
 /**
@@ -136,12 +138,12 @@ struct FlyToViewpointHandler : public osgGA::GUIEventHandler {
         if ( ea.getEventType() == ea.KEYDOWN && ea.getKey() >= '1' && ea.getKey() <= '6' ) {
             _manip->setViewpoint( VPs[ea.getKey()-'1'], 4.0 );
             aa.requestRedraw();
-            }
-        return false;
         }
+        return false;
+    }
 
     osg::observer_ptr<EarthManipulator> _manip;
-    };
+};
 
 
 /**
@@ -159,18 +161,18 @@ struct LockAzimuthHandler : public osgGA::GUIEventHandler {
             _manip->getSettings()->setLockAzimuthWhilePanning(!lockAzimuth);
             aa.requestRedraw();
             return true;
-            }
-        return false;
         }
+        return false;
+    }
 
     void getUsage(osg::ApplicationUsage& usage) const {
         using namespace std;
         usage.addKeyboardMouseBinding(string(1, _key), string("Toggle azimuth locking"));
-        }
+    }
 
     char _key;
     osg::ref_ptr<EarthManipulator> _manip;
-    };
+};
 
 
 int main(int argc, char** argv) {
@@ -180,7 +182,7 @@ int main(int argc, char** argv) {
     if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
         fprintf(stderr, "Unable to init SDL: %s\n", SDL_GetError());
         exit(1);
-        }
+    }
     atexit(SDL_Quit);
 
     // Starting with SDL 1.2.10, passing in 0 will use the system's current resolution.
@@ -192,10 +194,8 @@ int main(int argc, char** argv) {
 
     // If not linked to SDL 1.2.10+, then we must use hardcoded values
     const SDL_version* linked_version = SDL_Linked_Version();
-    if(linked_version->major == 1 && linked_version->minor == 2)
-    {
-        if(linked_version->patch < 10)
-        {
+    if(linked_version->major == 1 && linked_version->minor == 2) {
+        if(linked_version->patch < 10) {
             windowWidth = 1280;
             windowHeight = 1024;
         }
@@ -209,8 +209,7 @@ int main(int argc, char** argv) {
 
     // set up the surface to render to
     SDL_Surface* screen = SDL_SetVideoMode(windowWidth, windowHeight, bitDepth, SDL_OPENGL | SDL_FULLSCREEN | SDL_RESIZABLE);
-    if ( screen == NULL )
-    {
+    if ( screen == NULL ) {
         std::cerr<<"Unable to set "<<windowWidth<<"x"<<windowHeight<<" video: %s\n"<< SDL_GetError()<<std::endl;
         exit(1);
     }
@@ -236,7 +235,7 @@ int main(int argc, char** argv) {
     if (!earthNode) {
         OE_WARN << "Unable to load earth model." << std::endl;
         return -1;
-        }
+    }
 
     osg::Group* root = new osg::Group();
     root->addChild( earthNode );
@@ -249,8 +248,27 @@ int main(int argc, char** argv) {
         if ( mapNode->getMap()->isGeocentric() ) {
             manip->setHomeViewpoint(
                 Viewpoint( osg::Vec3d( -82.968, 35.839, 0 ), 0, -10.0, 150000 ) );
-            }
+
         }
+    }
+
+
+    // make an object
+    osg::Geode* geode = new osg::Geode();
+    //geode->addDrawable( new osg::ShapeDrawable( new osg::Sphere( osg::Vec3d(0,0,0), 10 ) ) );
+    geode->addDrawable( new osg::ShapeDrawable(new osg::Cylinder(osg::Vec3d(0,0,0), 2, 85.3)));
+
+    double hasml;
+    double hae;
+
+    osgEarth::Util::ElevationManager* elevation = new osgEarth::Util::ElevationManager(mapNode->getMap());
+    elevation->getElevation(-88.15841,42.97873, 0.0, mapNode->getMap()->getSRS(), hasml, hae);
+    //mapNode->getTerrain()->
+    std::cout<< hasml <<std::endl;
+
+    // place the geode on the map:
+    osgEarth::Util::ObjectPlacer placer( mapNode );
+    root->addChild( placer.placeNode( geode, 42.97873,  -88.15841, hasml ));
 
     viewer.setSceneData( root );
 
@@ -259,7 +277,7 @@ int main(int argc, char** argv) {
         osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON,
         osgGA::GUIEventAdapter::MODKEY_SHIFT );
 
-    manip->getSettings()->setMinMaxPitch(-80.0,0.8);
+    //manip->getSettings()->setMinMaxPitch(-80.0,0.8);
 
 
 
@@ -283,7 +301,6 @@ int main(int argc, char** argv) {
 
 
 
-
     osg::notify(osg::INFO)<<"USE_SDL"<<std::endl;
 
     bool done = false;
@@ -293,95 +310,95 @@ int main(int argc, char** argv) {
         while ( SDL_PollEvent(&event) ) {
             switch (event.type) {
 
-                case SDL_JOYBUTTONDOWN:
+            case SDL_JOYBUTTONDOWN:
 
-                    switch(event.jbutton.button) {
-                        case PS3ButtonSelect:
+                switch(event.jbutton.button) {
+                case PS3ButtonSelect:
 
-                            exit(-1);
-                            break;
-                        case PS3ButtonDPadUp:
+                    exit(-1);
+                    break;
+                case PS3ButtonDPadUp:
 
-                            zoomX -= 0.025;
-                            zoomY -= 0.025;
-                            zoom = true;
-                            break;
-                        case PS3ButtonDPadDown:
+                    zoomX -= 0.025;
+                    zoomY -= 0.025;
+                    zoom = true;
+                    break;
+                case PS3ButtonDPadDown:
 
-                            zoomX += 0.025;
-                            zoomY += 0.025;
-                            zoom = true;
-                            break;
-
-                        }
+                    zoomX += 0.025;
+                    zoomY += 0.025;
+                    zoom = true;
                     break;
 
-
-                case SDL_JOYBUTTONUP:
-
-                    switch(event.jbutton.button) {
-                        case PS3ButtonSelect:
-
-                            exit(-1);
-                            break;
-                        case PS3ButtonDPadUp:
-                            zoom = false;
-                            zoomX = 0.0;
-                            zoomY = 0.0;
-                            break;
-                        case PS3ButtonDPadDown:
-                            zoom = false;
-                            zoomX = 0.0;
-                            zoomY = 0.0;
-                            break;
-                        }
-                    break;
-
-                case SDL_JOYAXISMOTION:
-                    //axes movement
-                    if(event.jaxis.axis==0) {
-                        panX = -0.000005*event.jaxis.value;
-                        }
-                    if(event.jaxis.axis==1) {
-                        panY = 0.000005*event.jaxis.value;
-                        }
-
-
-                    if(event.jaxis.axis==2) {
-                        manip->rotate(-0.000003*event.jaxis.value, 0);
-                        //manip->rotate(event.jaxis.value/32767.0f,0);
-                        }
-                    if(event.jaxis.axis==3) {
-                        manip->rotate(0.0,osg::DegreesToRadians(0.00005*event.jaxis.value));
-                        }
-
-
-                    manip->pan(panX,panY);
-                    break;
-
-                case SDL_VIDEORESIZE:
-                    SDL_SetVideoMode(event.resize.w, event.resize.h, bitDepth, SDL_OPENGL | SDL_RESIZABLE);
-                    //gw->resized(0, 0, event.resize.w, event.resize.h );
-                    break;
-
-
-                case SDL_KEYUP:
-
-                    if (event.key.keysym.sym=='f') {
-                        SDL_WM_ToggleFullScreen(screen);
-                        //gw->resized(0, 0, screen->w, screen->h );
-                        }
-                    break;
-
-                case SDL_QUIT:
-                    done = true;
                 }
+                break;
+
+
+            case SDL_JOYBUTTONUP:
+
+                switch(event.jbutton.button) {
+                case PS3ButtonSelect:
+
+                    exit(-1);
+                    break;
+                case PS3ButtonDPadUp:
+                    zoom = false;
+                    zoomX = 0.0;
+                    zoomY = 0.0;
+                    break;
+                case PS3ButtonDPadDown:
+                    zoom = false;
+                    zoomX = 0.0;
+                    zoomY = 0.0;
+                    break;
+                }
+                break;
+
+            case SDL_JOYAXISMOTION:
+                //axes movement
+                if(event.jaxis.axis==0) {
+                    panX = -0.000005*event.jaxis.value;
+                }
+                if(event.jaxis.axis==1) {
+                    panY = 0.000005*event.jaxis.value;
+                }
+
+
+                if(event.jaxis.axis==2) {
+                    manip->rotate(-0.000003*event.jaxis.value, 0);
+                    //manip->rotate(event.jaxis.value/32767.0f,0);
+                }
+                if(event.jaxis.axis==3) {
+                    manip->rotate(0.0,osg::DegreesToRadians(0.00005*event.jaxis.value));
+                }
+
+
+                manip->pan(panX,panY);
+                break;
+
+            case SDL_VIDEORESIZE:
+                SDL_SetVideoMode(event.resize.w, event.resize.h, bitDepth, SDL_OPENGL | SDL_RESIZABLE);
+                //gw->resized(0, 0, event.resize.w, event.resize.h );
+                break;
+
+
+            case SDL_KEYUP:
+
+                if (event.key.keysym.sym=='f') {
+                    SDL_WM_ToggleFullScreen(screen);
+                    //gw->resized(0, 0, screen->w, screen->h );
+                }
+                break;
+
+            case SDL_QUIT:
+                done = true;
+            }
             if(zoom) {
                 manip->zoom(zoomX,zoomY);
-                }
-
-
             }
+
+
+        }
 
         if (done) continue;
 
@@ -391,6 +408,7 @@ int main(int argc, char** argv) {
 
         // Swap Buffers
         SDL_GL_SwapBuffers();
-        }
-    return 0;
     }
+    return 0;
+}
+

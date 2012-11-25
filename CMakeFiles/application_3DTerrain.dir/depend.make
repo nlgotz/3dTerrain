@@ -312,8 +312,10 @@ src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/3DTerrain.cpp.o:
 src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/3DTerrain.cpp.o: src/osgEarthUtil/Common
 src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/3DTerrain.cpp.o: src/osgEarthUtil/Controls
 src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/3DTerrain.cpp.o: src/osgEarthUtil/EarthManipulator
+src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/3DTerrain.cpp.o: src/osgEarthUtil/ElevationManager
 src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/3DTerrain.cpp.o: src/osgEarthUtil/ExampleResources
 src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/3DTerrain.cpp.o: src/osgEarthUtil/Export
+src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/3DTerrain.cpp.o: src/osgEarthUtil/ObjectPlacer
 src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/3DTerrain.cpp.o: src/osgEarthUtil/SkyNode
 
 src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/SDLIntegration.cpp.o: src/applications/3DTerrain/SDLIntegration.cpp
