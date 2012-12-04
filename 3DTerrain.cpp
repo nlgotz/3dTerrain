@@ -58,123 +58,6 @@ using namespace osgEarth::Annotation;
 #define D2R (osg::PI/180.0)
 #define R2D (180.0/osg::PI)
 
-
-
-
-enum PS3Button {
-    PS3ButtonSelect		= 0,
-    PS3ButtonL3		= 1,
-    PS3ButtonR3		= 2,
-    PS3ButtonStart		= 3,
-    PS3ButtonDPadUp		= 4,
-    PS3ButtonDPadRight	= 5,
-    PS3ButtonDPadDown	= 6,
-    PS3ButtonDPadLeft	= 7,
-    PS3ButtonL2		= 8,
-    PS3ButtonR2		= 9,
-    PS3ButtonL1		= 10,
-    PS3ButtonR1		= 11,
-    PS3ButtonTriangle	= 12,
-    PS3ButtonCircle		= 13,
-    PS3ButtonX		= 14,
-    PS3ButtonSquare		= 15,
-    PS3ButtonPS3Button	= 16,
-};
-
-/**
- * Builds our help menu UI.
- */
-/*Control* createHelp( osgViewer::View* view )
-{
-    static char* text[] = {
-        "left mouse :",        "pan",
-        "middle mouse :",      "rotate",
-        "right mouse :",       "continuous zoom",
-        "double-click :",      "zoom to point",
-        "scroll wheel :",      "zoom in/out",
-        "arrows :",            "pan",
-        "1-6 :",               "fly to preset viewpoints",
-        "shift-right-mouse :", "locked panning",
-        "u :",                 "toggle azimuth lock",
-        "c :",                 "toggle perspective/ortho",
-        "t :",                 "toggle tethering"
-    };
-
-    Grid* g = new Grid();
-    for( unsigned i=0; i<sizeof(text)/sizeof(text[0]); ++i ) {
-        unsigned c = i % 2;
-        unsigned r = i / 2;
-        g->setControl( c, r, new LabelControl(text[i]) );
-    }
-
-    VBox* v = new VBox();
-    v->addControl( g );
-
-    return v;
-}*/
-
-
-/**
- * Some preset viewpoints to show off the setViewpoint function.
- */
-static Viewpoint VPs[] = {
-    Viewpoint( "Africa",        osg::Vec3d(    0.0,   0.0, 0.0 ), 0.0, -90.0, 10e6 ),
-    Viewpoint( "California",    osg::Vec3d( -121.0,  34.0, 0.0 ), 0.0, -90.0, 6e6 ),
-    Viewpoint( "Europe",        osg::Vec3d(    0.0,  45.0, 0.0 ), 0.0, -90.0, 4e6 ),
-    Viewpoint( "Washington DC", osg::Vec3d(  -77.0,  38.0, 0.0 ), 0.0, -90.0, 1e6 ),
-    Viewpoint( "Australia",     osg::Vec3d(  135.0, -20.0, 0.0 ), 0.0, -90.0, 2e6 ),
-    Viewpoint( "Tower Site",        osg::Vec3d(  -88.15841, 42.97873, 0 ), 0.0, -90, 1e5 )
-};
-
-
-/**
- * Handler that demonstrates the "viewpoint" functionality in
- *  osgEarthUtil::EarthManipulator. Press a number key to fly to a viewpoint.
- */
-struct FlyToViewpointHandler : public osgGA::GUIEventHandler {
-    FlyToViewpointHandler( EarthManipulator* manip ) : _manip(manip) { }
-
-    bool handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa ) {
-        if ( ea.getEventType() == ea.KEYDOWN && ea.getKey() >= '1' && ea.getKey() <= '6' ) {
-            _manip->setViewpoint( VPs[ea.getKey()-'1'], 4.0 );
-            aa.requestRedraw();
-        }
-        return false;
-    }
-
-    osg::observer_ptr<EarthManipulator> _manip;
-};
-
-
-/**
- * Handler to toggle "azimuth locking", which locks the camera's relative Azimuth
- * while panning. For example, it can maintain "north-up" as you pan around. The
- * caveat is that when azimuth is locked you cannot cross the poles.
- */
-struct LockAzimuthHandler : public osgGA::GUIEventHandler {
-    LockAzimuthHandler(char key, EarthManipulator* manip)
-        : _key(key), _manip(manip) { }
-
-    bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) {
-        if (ea.getEventType() == ea.KEYDOWN && ea.getKey() == _key) {
-            bool lockAzimuth = _manip->getSettings()->getLockAzimuthWhilePanning();
-            _manip->getSettings()->setLockAzimuthWhilePanning(!lockAzimuth);
-            aa.requestRedraw();
-            return true;
-        }
-        return false;
-    }
-
-    void getUsage(osg::ApplicationUsage& usage) const {
-        using namespace std;
-        usage.addKeyboardMouseBinding(string(1, _key), string("Toggle azimuth locking"));
-    }
-
-    char _key;
-    osg::ref_ptr<EarthManipulator> _manip;
-};
-
-
 int main(int argc, char** argv) {
     osg::ArgumentParser arguments(&argc,argv);
 
@@ -221,17 +104,15 @@ int main(int argc, char** argv) {
     windowHeight = screen->h;
 
     osgViewer::Viewer viewer(arguments);
+    //SDL window embedder that causes my laptop to crash
     //osg::ref_ptr<osgViewer::GraphicsWindowEmbedded> gw = viewer.setUpViewerAsEmbeddedInWindow(0,0,windowWidth,windowHeight);
-
 
     // install the programmable manipulator.
     EarthManipulator* manip = new EarthManipulator();
     viewer.setCameraManipulator( manip );
 
-    // UI:
-    //Control* help = createHelp(&viewer);
 
-    osg::Node* earthNode = MapNodeHelper().load( arguments, &viewer);//, help );
+    osg::Node* earthNode = MapNodeHelper().load( arguments, &viewer);
     if (!earthNode) {
         OE_WARN << "Unable to load earth model." << std::endl;
         return -1;
@@ -244,7 +125,7 @@ int main(int argc, char** argv) {
     if ( mapNode ) {
         if ( mapNode )
             manip->setNode( mapNode->getTerrainEngine() );
-
+        //sets the home viewpoint
         if ( mapNode->getMap()->isGeocentric() ) {
             manip->setHomeViewpoint(
                 Viewpoint( osg::Vec3d( -82.968, 35.839, 0 ), 0, -10.0, 150000 ) );
@@ -252,129 +133,44 @@ int main(int argc, char** argv) {
         }
     }
 
+    //tower is used for placing radio towers in SDLIntegration
+    osg::Group* tower = new osg::Group();
+    root->addChild(tower);
 
-    // make an object
-    osg::Geode* geode = new osg::Geode();
-    //geode->addDrawable( new osg::ShapeDrawable( new osg::Sphere( osg::Vec3d(0,0,0), 10 ) ) );
-    geode->addDrawable( new osg::ShapeDrawable(new osg::Cylinder(osg::Vec3d(0,0,0), 2, 85.3)));
-
-    double hasml;
-    double hae;
-
-    osgEarth::Util::ElevationManager* elevation = new osgEarth::Util::ElevationManager(mapNode->getMap());
-    elevation->getElevation(-88.15841,42.97873, 0.0, mapNode->getMap()->getSRS(), hasml, hae);
-    //mapNode->getTerrain()->
-    std::cout<< hasml <<std::endl;
-
-    // place the geode on the map:
-    osgEarth::Util::ObjectPlacer placer( mapNode );
-    root->addChild( placer.placeNode( geode, 42.97873,  -88.15841, hasml ));
-
+    //set root as the main scene
     viewer.setSceneData( root );
 
+    //set the mouse actions
     manip->getSettings()->bindMouse(
         EarthManipulator::ACTION_EARTH_DRAG,
         osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON,
         osgGA::GUIEventAdapter::MODKEY_SHIFT );
 
-    //manip->getSettings()->setMinMaxPitch(-80.0,0.8);
-
 
 
     manip->getSettings()->setArcViewpointTransitions( true );
 
-    viewer.addEventHandler(new FlyToViewpointHandler( manip ));
-    viewer.addEventHandler(new LockAzimuthHandler('u', manip));
-
     viewer.realize();
 
 
-    SDLIntegration sdlIntegration;
-    SDL_Event event;
-
-    bool zoom = false;
-    double zoomX = 0.0;
-    double zoomY = 0.0;
-
-    double panX = 0.0;
-    double panY = 0.0;
-
-
+    //initialize the controller
+    SDLIntegration controller(manip, tower, mapNode);
+    SDL_Event event; //handles SDL events
 
     osg::notify(osg::INFO)<<"USE_SDL"<<std::endl;
 
     bool done = false;
+    /*
+     * this while loop handles all of the SDL input into OSG
+     */
     while( !done ) {
-        SDL_Event event;
-
         while ( SDL_PollEvent(&event) ) {
+
+            //This handles all input from the controller
+            controller.input(event);
+            //std::cout << manip->getViewpoint().getFocalPoint().x() << std::endl;
+            //handle all the other SDL event stuff
             switch (event.type) {
-
-            case SDL_JOYBUTTONDOWN:
-
-                switch(event.jbutton.button) {
-                case PS3ButtonSelect:
-
-                    exit(-1);
-                    break;
-                case PS3ButtonDPadUp:
-
-                    zoomX -= 0.025;
-                    zoomY -= 0.025;
-                    zoom = true;
-                    break;
-                case PS3ButtonDPadDown:
-
-                    zoomX += 0.025;
-                    zoomY += 0.025;
-                    zoom = true;
-                    break;
-
-                }
-                break;
-
-
-            case SDL_JOYBUTTONUP:
-
-                switch(event.jbutton.button) {
-                case PS3ButtonSelect:
-
-                    exit(-1);
-                    break;
-                case PS3ButtonDPadUp:
-                    zoom = false;
-                    zoomX = 0.0;
-                    zoomY = 0.0;
-                    break;
-                case PS3ButtonDPadDown:
-                    zoom = false;
-                    zoomX = 0.0;
-                    zoomY = 0.0;
-                    break;
-                }
-                break;
-
-            case SDL_JOYAXISMOTION:
-                //axes movement
-                if(event.jaxis.axis==0) {
-                    panX = -0.000005*event.jaxis.value;
-                }
-                if(event.jaxis.axis==1) {
-                    panY = 0.000005*event.jaxis.value;
-                }
-
-
-                if(event.jaxis.axis==2) {
-                    manip->rotate(-0.000003*event.jaxis.value, 0);
-                    //manip->rotate(event.jaxis.value/32767.0f,0);
-                }
-                if(event.jaxis.axis==3) {
-                    manip->rotate(0.0,osg::DegreesToRadians(0.00005*event.jaxis.value));
-                }
-
-
-                manip->pan(panX,panY);
-                break;
 
             case SDL_VIDEORESIZE:
                 SDL_SetVideoMode(event.resize.w, event.resize.h, bitDepth, SDL_OPENGL | SDL_RESIZABLE);
@@ -383,7 +179,15 @@ int main(int argc, char** argv) {
 
 
             case SDL_KEYUP:
-
+                /*
+                 * Escape doesn't work properly because OSG won't embed into SDL
+                 * on my laptop properly. Maybe after the final, I'll try fixing
+                 * this, but I've already had to reinstall everything once and
+                 * don't want to do that again, less than 2 weeks from finals
+                 */
+                if(event.key.keysym.sym==SDLK_ESCAPE) {
+                    exit(-1);
+                }
                 if (event.key.keysym.sym=='f') {
                     SDL_WM_ToggleFullScreen(screen);
                     //gw->resized(0, 0, screen->w, screen->h );
@@ -393,11 +197,6 @@ int main(int argc, char** argv) {
             case SDL_QUIT:
                 done = true;
             }
-            if(zoom) {
-                manip->zoom(zoomX,zoomY);
-            }
-
-
         }
 
         if (done) continue;

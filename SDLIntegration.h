@@ -27,62 +27,91 @@
 #include <SDL_joystick.h>
 
 #include <osgViewer/Viewer>
+#include <osgEarthUtil/EarthManipulator>
+#include <osgEarthUtil/ObjectPlacer>
+#include <osg/ShapeDrawable>
+#include <osgEarthUtil/ElevationManager>
 
 #include <vector>
 #include <map>
 
 class SDLIntegration : public osgGA::GUIEventHandler {
-    public:
-        SDLIntegration();
-        ~SDLIntegration();
+
+private:
+    void viewID(bool positiveNum);
+
+
+public:
+    SDLIntegration(osgEarth::Util::EarthManipulator* manip, osg::Group* tower, osgEarth::MapNode* mapNode);
+    ~SDLIntegration();
+    void input(SDL_Event event);
 
 
 
 
-    protected:
-        SDL_Joystick*   _joystick;
-        SDL_Event      _event;
-        int             _numAxes;
-        int             _numButtons;
-        bool            _verbose;
+protected:
+    bool            _objectMode;
+    void buttonDownNavigate(Uint8 bID);
+    void buttonUpNavigate(Uint8 bID);
+    void axesMovementNavigate(Uint8 aID, Sint16 value);
+
+    SDL_Joystick*   _joystick;
+    SDL_Event      _event;
+    osgEarth::Util::EarthManipulator* _manip;
+    osg::Group* _tower;
+    osgEarth::MapNode* _mapNode;
+    int             _numAxes;
+    int             _numButtons;
+    bool            _verbose;
+    //this stuff should be put into structs, but that's a low priority
+    double          _panX;
+    double          _panY;
+    double          _rotateX;
+    double          _rotateY;
+    bool            _zoom;
+    double          _zoomX;
+    double          _zoomY;
+    int _POInum;
+    osgEarth::Util::ElevationManager* _elevation;
+    osg::Geode* _geode;
 
 
-        //button mapping
-        enum PS3Button {
-            PS3ButtonSelect		= 0,
-            PS3ButtonL3		= 1,
-            PS3ButtonR3		= 2,
-            PS3ButtonStart		= 3,
-            PS3ButtonDPadUp		= 4,
-            PS3ButtonDPadRight	= 5,
-            PS3ButtonDPadDown	= 6,
-            PS3ButtonDPadLeft	= 7,
-            PS3ButtonL2		= 8,
-            PS3ButtonR2		= 9,
-            PS3ButtonL1		= 10,
-            PS3ButtonR1		= 11,
-            PS3ButtonTriangle	= 12,
-            PS3ButtonCircle		= 13,
-            PS3ButtonX		= 14,
-            PS3ButtonSquare		= 15,
-            PS3ButtonPS3Button	= 16,
-            };
 
-        /*
-         * axes mapping
-         * there are more axes available, but I'm not positive on what each one
-         * does to name them yet.
-         */
-        enum PS3Axes {
-            PS3AxesLeftX	= 0,
-            PS3AxesLeftY	= 1,
-            PS3AxesRightX	= 2,
-            PS3AxesRightY	= 3,
-            PS3AxesRoll     = 4,
-            PS3AxesPitch    = 5,
-            PS3AxesAccel    = 6,
-            };
-
+    //button mapping
+    enum PS3Button {
+        PS3ButtonSelect		= 0,
+        PS3ButtonL3		= 1,
+        PS3ButtonR3		= 2,
+        PS3ButtonStart		= 3,
+        PS3ButtonDPadUp		= 4,
+        PS3ButtonDPadRight	= 5,
+        PS3ButtonDPadDown	= 6,
+        PS3ButtonDPadLeft	= 7,
+        PS3ButtonL2		= 8,
+        PS3ButtonR2		= 9,
+        PS3ButtonL1		= 10,
+        PS3ButtonR1		= 11,
+        PS3ButtonTriangle	= 12,
+        PS3ButtonCircle		= 13,
+        PS3ButtonX		= 14,
+        PS3ButtonSquare		= 15,
+        PS3ButtonPS3Button	= 16,
     };
+
+    /*
+     * axes mapping
+     * there are more axes available, but I'm not positive on what each one
+     * does to name them yet.
+     */
+    enum PS3Axes {
+        PS3AxesLeftX	= 0,
+        PS3AxesLeftY	= 1,
+        PS3AxesRightX	= 2,
+        PS3AxesRightY	= 3,
+        PS3AxesRoll     = 4,
+        PS3AxesPitch    = 5,
+        PS3AxesAccel    = 6,
+    };
+};
 
 #endif

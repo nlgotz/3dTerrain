@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/nathan/src/osgearth
+CMAKE_SOURCE_DIR = /home/nathan/src/osgearth/src/applications/3DTerrain
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/nathan/src/osgearth
+CMAKE_BINARY_DIR = /home/nathan/src/osgearth/src/applications/3DTerrain
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -98,26 +98,6 @@ list_install_components:
 list_install_components/fast: list_install_components
 .PHONY : list_install_components/fast
 
-# Special rule for the target package
-package: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool..."
-	cd /home/nathan/src/osgearth && /usr/bin/cpack --config ./CPackConfig.cmake
-.PHONY : package
-
-# Special rule for the target package
-package/fast: package
-.PHONY : package/fast
-
-# Special rule for the target package_source
-package_source:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
-	cd /home/nathan/src/osgearth && /usr/bin/cpack --config ./CPackSourceConfig.cmake /home/nathan/src/osgearth/CPackSourceConfig.cmake
-.PHONY : package_source
-
-# Special rule for the target package_source
-package_source/fast: package_source
-.PHONY : package_source/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -130,14 +110,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/nathan/src/osgearth && $(CMAKE_COMMAND) -E cmake_progress_start /home/nathan/src/osgearth/CMakeFiles /home/nathan/src/osgearth/src/applications/3DTerrain/CMakeFiles/progress.marks
-	cd /home/nathan/src/osgearth && $(MAKE) -f CMakeFiles/Makefile2 src/applications/3DTerrain/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nathan/src/osgearth/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nathan/src/osgearth/src/applications/3DTerrain/CMakeFiles /home/nathan/src/osgearth/src/applications/3DTerrain/CMakeFiles/progress.marks
+	$(MAKE) -f CMakeFiles/Makefile2 all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nathan/src/osgearth/src/applications/3DTerrain/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/nathan/src/osgearth && $(MAKE) -f CMakeFiles/Makefile2 src/applications/3DTerrain/clean
+	$(MAKE) -f CMakeFiles/Makefile2 clean
 .PHONY : clean
 
 # The main clean target
@@ -146,39 +126,51 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/nathan/src/osgearth && $(MAKE) -f CMakeFiles/Makefile2 src/applications/3DTerrain/preinstall
+	$(MAKE) -f CMakeFiles/Makefile2 preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/nathan/src/osgearth && $(MAKE) -f CMakeFiles/Makefile2 src/applications/3DTerrain/preinstall
+	$(MAKE) -f CMakeFiles/Makefile2 preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/nathan/src/osgearth && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-# Convenience name for target.
-src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/rule:
-	cd /home/nathan/src/osgearth && $(MAKE) -f CMakeFiles/Makefile2 src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/rule
-.PHONY : src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/rule
+#=============================================================================
+# Target rules for targets named 3DTerrain
 
-# Convenience name for target.
-application_3DTerrain: src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/rule
-.PHONY : application_3DTerrain
+# Build rule for target.
+3DTerrain: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 3DTerrain
+.PHONY : 3DTerrain
 
 # fast build rule for target.
-application_3DTerrain/fast:
-	cd /home/nathan/src/osgearth && $(MAKE) -f src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/build.make src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/build
-.PHONY : application_3DTerrain/fast
+3DTerrain/fast:
+	$(MAKE) -f CMakeFiles/3DTerrain.dir/build.make CMakeFiles/3DTerrain.dir/build
+.PHONY : 3DTerrain/fast
+
+#=============================================================================
+# Target rules for targets named uninstall
+
+# Build rule for target.
+uninstall: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 uninstall
+.PHONY : uninstall
+
+# fast build rule for target.
+uninstall/fast:
+	$(MAKE) -f CMakeFiles/uninstall.dir/build.make CMakeFiles/uninstall.dir/build
+.PHONY : uninstall/fast
 
 3DTerrain.o: 3DTerrain.cpp.o
 .PHONY : 3DTerrain.o
 
 # target to build an object file
 3DTerrain.cpp.o:
-	cd /home/nathan/src/osgearth && $(MAKE) -f src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/build.make src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/3DTerrain.cpp.o
+	$(MAKE) -f CMakeFiles/3DTerrain.dir/build.make CMakeFiles/3DTerrain.dir/3DTerrain.cpp.o
 .PHONY : 3DTerrain.cpp.o
 
 3DTerrain.i: 3DTerrain.cpp.i
@@ -186,7 +178,7 @@ application_3DTerrain/fast:
 
 # target to preprocess a source file
 3DTerrain.cpp.i:
-	cd /home/nathan/src/osgearth && $(MAKE) -f src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/build.make src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/3DTerrain.cpp.i
+	$(MAKE) -f CMakeFiles/3DTerrain.dir/build.make CMakeFiles/3DTerrain.dir/3DTerrain.cpp.i
 .PHONY : 3DTerrain.cpp.i
 
 3DTerrain.s: 3DTerrain.cpp.s
@@ -194,7 +186,7 @@ application_3DTerrain/fast:
 
 # target to generate assembly for a file
 3DTerrain.cpp.s:
-	cd /home/nathan/src/osgearth && $(MAKE) -f src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/build.make src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/3DTerrain.cpp.s
+	$(MAKE) -f CMakeFiles/3DTerrain.dir/build.make CMakeFiles/3DTerrain.dir/3DTerrain.cpp.s
 .PHONY : 3DTerrain.cpp.s
 
 SDLIntegration.o: SDLIntegration.cpp.o
@@ -202,7 +194,7 @@ SDLIntegration.o: SDLIntegration.cpp.o
 
 # target to build an object file
 SDLIntegration.cpp.o:
-	cd /home/nathan/src/osgearth && $(MAKE) -f src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/build.make src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/SDLIntegration.cpp.o
+	$(MAKE) -f CMakeFiles/3DTerrain.dir/build.make CMakeFiles/3DTerrain.dir/SDLIntegration.cpp.o
 .PHONY : SDLIntegration.cpp.o
 
 SDLIntegration.i: SDLIntegration.cpp.i
@@ -210,7 +202,7 @@ SDLIntegration.i: SDLIntegration.cpp.i
 
 # target to preprocess a source file
 SDLIntegration.cpp.i:
-	cd /home/nathan/src/osgearth && $(MAKE) -f src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/build.make src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/SDLIntegration.cpp.i
+	$(MAKE) -f CMakeFiles/3DTerrain.dir/build.make CMakeFiles/3DTerrain.dir/SDLIntegration.cpp.i
 .PHONY : SDLIntegration.cpp.i
 
 SDLIntegration.s: SDLIntegration.cpp.s
@@ -218,7 +210,7 @@ SDLIntegration.s: SDLIntegration.cpp.s
 
 # target to generate assembly for a file
 SDLIntegration.cpp.s:
-	cd /home/nathan/src/osgearth && $(MAKE) -f src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/build.make src/applications/3DTerrain/CMakeFiles/application_3DTerrain.dir/SDLIntegration.cpp.s
+	$(MAKE) -f CMakeFiles/3DTerrain.dir/build.make CMakeFiles/3DTerrain.dir/SDLIntegration.cpp.s
 .PHONY : SDLIntegration.cpp.s
 
 # Help Target
@@ -227,15 +219,14 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... application_3DTerrain"
+	@echo "... 3DTerrain"
 	@echo "... edit_cache"
 	@echo "... install"
 	@echo "... install/local"
 	@echo "... install/strip"
 	@echo "... list_install_components"
-	@echo "... package"
-	@echo "... package_source"
 	@echo "... rebuild_cache"
+	@echo "... uninstall"
 	@echo "... 3DTerrain.o"
 	@echo "... 3DTerrain.i"
 	@echo "... 3DTerrain.s"
@@ -253,6 +244,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/nathan/src/osgearth && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
