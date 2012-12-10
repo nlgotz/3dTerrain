@@ -67,7 +67,7 @@ Examples
 --------
 The examples folder contains 1 example .earth file. In order to actually work, the tiff.earth file needs to be modified so that the urls point to actual files
 
-Heightfield Sources
+Elevation Sources
 -------------------
 The best source for NED files is from the USGS National Map (http://nationalmap.gov/viewer.html)
 
