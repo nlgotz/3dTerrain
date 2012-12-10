@@ -1,2 +1,0 @@
-/home/nathan/src/osgearth/src/applications/3DTerrain/CMakeFiles/3DTerrain.dir
-/home/nathan/src/osgearth/src/applications/3DTerrain/CMakeFiles/uninstall.dir

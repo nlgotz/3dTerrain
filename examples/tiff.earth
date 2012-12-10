@@ -1,0 +1,52 @@
+<!-- 
+osgEarth Sample - GDAL Driver
+Demonstrates the simplest possible use of the GDAL driver to load a GeoTIFF image.
+-->
+
+<map type="geocentric" version="2">
+    <image name="arcgisonline esri imagery" driver="arcgis">
+        <url>http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer</url>
+        <nodata_image>http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_Imagery_World_2D/MapServer/tile/100/0/0.jpeg</nodata_image>
+    </image>
+    <heightfield name = "Smokey Mountains" driver = "gdal">
+      <url>/home/nathan/terrain/gd_smokeymnts.tif</url>
+    </heightfield>
+    <heightfield name = "Michigan" driver = "gdal">
+      <url>/home/nathan/terrain/MI_DEM1.tif</url>
+    </heightfield>
+    <heightfield name = "Wisconsin" driver = "gdal">
+      <url>/home/nathan/terrain/WI_DEM1.tif</url>
+    </heightfield>
+
+    <model name="terrain_outline" driver="feature_geom">
+
+        <!-- Configure the OGR feature driver to read the shapefile. -->             
+        <features name="terrain_outline" driver="ogr">
+            <url>/home/nathan/terrain/shp/Outline/Outline.shp</url>
+            <build_spatial_index>true</build_spatial_index>
+            <convert type="line"/>
+        </features>
+        <styles>
+            <style type="text/css">
+                terrain_outline {
+                   stroke:             #ffff00;
+                   stroke-opacity:     1.0;
+                   stroke-width:       3.0;
+                   altitude-clamping:  terrain;
+                   altitude-technique: gpu;
+                }   
+            </style>
+        </styles>
+        
+    </model>
+<options>
+    <loading_policy mode="preemptive"/>
+    <cache type="filesystem">
+    <path>/home/nathan/terrain_cache</path>
+    </cache>
+    
+    <lighting>
+        false
+    </lighting>
+</options>    
+</map>

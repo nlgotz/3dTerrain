@@ -19,24 +19,49 @@ This is my final project for UWP Fall 2012 CS420-001 Computer Graphics.
 
 Building and running
 --------------------
-To build 3DTerrain (please note, this won't work right now, you need to modify two of the cmake files in the osgearth project for this to work (this will be fixed soon)):
+To build 3DTerrain (This has only been tested on Ubuntu 12.04.1 x86_64):
+cd <3DTerrain folder>
+cmake .
+make
+sudo make install
 
-make application_3DTerrain
+The last step is optional and will install 3DTerrain to /usr/local/bin and allow you to just use 3DTerrain <path to .earth file> 
 
-To run from the osgearth folder:
-
+to execute:
 ./bin/3DTerrain <path to .earth file>
+
+To improve performance, seeding the cache can be helpful. To do this run:
+osgeath_cache --seed <path to .earth file>
 
 Next Steps
 ----------
-- Fix cmake to work outside osgEarth directoy
-- Add Tower Placement
-- Improve caching and precaching
-- Clean up SDL code
+- Improve precaching
+- Make POI programmable from XML file
+- Improve object placement to allow for multiple objects and have it independent of the camera.
 
-Right now, the project only builds if it is in the applications folder of osgEarth, the most immediated goal is to redo the cmake and make files to work outside of the osgEarth folder.
+Controls
+--------
+3DTerrain is best controlled by a PS3 controller, but some features can be done with the mouse.
 
-As part of my final project, the user will be able to place radio towers in the terrain and (may) be able to scale the tower. The tower will most likely be implemented via a glutwireframe object.
+PS3 Controls:
+Left stick - pan (move forward, backward, left, right)
+Right stick - rotate (x-axis) and tilt (y-axis)
+DPad Up/Down - Zoom in/out
+L1/R1 - navigate POI (points of interest) by default these are WI/MI power plants
+x - place a tower at the center of the screen
+triangle - remove the last tower
+Select - exit the program
+PS3 button - reset view to the original view.
+
+Mouse:
+Left - pan
+Right - zoom
+Middle - rotate/tilt
+scroll up/down - zoom in/out
+
+Keyboard:
+ESC - should exit the program, but right now it just freezes the screen
+f - toggle fullscreen
 
 Licensing
 ---------
