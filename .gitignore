@@ -16,5 +16,7 @@
 CMakeCache.txt
 CMakeFiles
 Makefile
-cmake_install.cmake
+*.cmake
 install_manifest.txt
+
+Dr Riley README.txt
