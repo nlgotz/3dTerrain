@@ -63,6 +63,18 @@ Keyboard:
 ESC - should exit the program, but right now it just freezes the screen
 f - toggle fullscreen
 
+Examples
+--------
+The examples folder contains 1 example .earth file. In order to actually work, the tiff.earth file needs to be modified so that the urls point to actual files
+
+Heightfield Sources
+-------------------
+The best source for NED files is from the USGS National Map (http://nationalmap.gov/viewer.html)
+
+Some states also provide their own lower resolution (and older style DEM files).
+Wisconsin's DNR provides both 30M and 10M resolution DEM and NED files that can be found at http://dnr.wi.gov/maps/gis/geolibrary.html
+
+
 Licensing
 ---------
 3DTerrain is free software: you can redistribute it and/or modify
